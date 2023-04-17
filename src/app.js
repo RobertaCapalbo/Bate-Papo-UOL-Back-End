@@ -33,9 +33,7 @@ app.post("/participants", async (req, res) => {
         if((existantP)){
         return res.sendStatus(409);
     };
-    if (name = "" || !name){
-        return res.sendStatus(422);
-    }
+
     try {
         const newMessage = {
             from: name,
