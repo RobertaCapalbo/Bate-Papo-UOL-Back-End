@@ -60,9 +60,9 @@ app.get("/participants", async (req, res) => {
 
 app.post("/messages", async (req, res) => {
     const messageSchema = joi.object({
-        to: joi.string().min(1).required(),
-        text: joi.string().min(1).required(),
-        type: joi.string().min(1).required()
+        to: joi.string().required(),
+        text: joi.string().required(),
+        type: joi.string().valid("message", "private_message").required()
     })
     const validation = messageSchema.validate(req.body)
     if(validation.error){
