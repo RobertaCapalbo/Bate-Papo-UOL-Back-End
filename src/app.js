@@ -67,7 +67,7 @@ app.post("/messages", async (req, res) => {
         const exstPt = await db.collection("participants").findOne({ name: user })
         if (exstPt === null) return res.sendStatus(422)
         const time = dayjs().format("HH:mm:ss")
-        const newMessage = { from: user, to: to, text: text, type: type, time: time }
+        const newMessage = { from: user, to, text, type, time }
         await db.collection("messages").insertOne(newMessage)
         return res.sendStatus(201)
     } catch (err) {
