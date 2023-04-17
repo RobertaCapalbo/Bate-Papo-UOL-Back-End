@@ -26,8 +26,8 @@ app.post("/participants", async (req, res) => {
             name: joi.string().min(1).required()
         });
         const validate = pSchema.validate(req.body);
-        if (validate) {
-            return res.status(422)
+        if (validate.error) {
+            return res.status(422).send(error.details[0].message);
         }
         const existantP = await db.collection('participants').findOne({name});
         if((existantP)){
@@ -52,7 +52,6 @@ app.get("/participants", async (req, res) => {
         const participants = await db.collection("participants").find().toArray()
         res.send(participants)
     } catch (err) {
-        console.log(err)
         res.sendStatus(500)
     }
 })
