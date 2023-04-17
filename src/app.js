@@ -41,6 +41,7 @@ app.post("/participants", async (req, res) => {
             type: 'status',
             time: dayjs(statusDate).format('HH:mm:ss')
         }
+        await db.collection('participants').insertOne(req.body)
         await db.collection("messages").insertOne(newMessage)
         res.status(201).send("Tudo certo")
     }
