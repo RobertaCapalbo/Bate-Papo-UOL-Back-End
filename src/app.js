@@ -59,6 +59,23 @@ app.get("/participants", async (req, res) => {
         res.sendStatus(500)
     }
 })
+
+app.post("/messages", async (req, res) => {
+    const { to, text, type } = req.body
+    try {
+        const { user } = req.headers
+        const exstPt = await db.collection("participants").findOne({ name: user })
+        if (exstPt === null) return res.sendStatus(422)
+        const time = dayjs().format("HH:mm:ss")
+        const newMessage = { from: user, to: to, text: text, type: type, time: time }
+        await db.collection("messages").insertOne(newMessage)
+        return res.sendStatus(201)
+    } catch (err) {
+        return res.status(500).send(err.message)
+    }
+
+})
+
 app.get("/messages", async (req, res) => {
     const {user} = req.headers;
     let limit = parseInt(req.query.limit);
