@@ -105,24 +105,29 @@ app.get("/messages", async (req, res) => {
     }
 })
 
-
 app.post('/status', async (req, res) => {
     let {user} = req.headers;
-    if (user === "" || !user) return res.sendStatus(404)
+    const userSchema = joi.object({
+        user : joi.string().required()
+    }).unknown()
+    const validate = userSchema.validate(req.headers);
+        if (validate.error) {
+            return res.sendStatus(422);
+        }
     const participant = await db.collection('participants').findOne({name: user});
     if(!participant){
         return res.sendStatus(404); 
     };
-    const st = Date.now();
+    const lastStatus = Date.now();
     try {
-        const att = await db.collection('participants').updateOne({name: user}, {$set: st});
+        const att = await db.collection('participants').updateOne({name: user}, {$set: {lastStatus}});
         if (!att) return res.sendStatus(404)
         res.sendStatus(200);
     } catch (error) {
+        console.log(error)
         res.sendStatus(500);
     };
 });
-
 
 setInterval(async () => {
     const participants = await db.collection('participants').find().toArray();
