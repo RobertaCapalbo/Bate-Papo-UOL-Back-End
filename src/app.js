@@ -65,7 +65,7 @@ app.post("/messages", async (req, res) => {
         type: joi.string().min(1).required()
     })
     const validation = messageSchema.validate(req.body)
-    if(validate.error){
+    if(validation.error){
         return res.sendStatus(422);
     }
     const { to, text, type } = req.body
