@@ -26,11 +26,11 @@ app.post("/participants", async (req, res) => {
             name: joi.string().min(1).required()
         });
         const validate = pSchema.validate(req.body);
-        if (validate.error) {
-            return res.status(422).send(error.details[0].message);
+        if (validate) {
+            return res.status(422)
         }
-        const double = await db.collection('participants').findOne({name});
-        if((double)){
+        const existantP = await db.collection('participants').findOne({name});
+        if((existantP)){
         return res.sendStatus(409);
     };
     try {
@@ -99,7 +99,6 @@ app.post('/status', async (req, res) => {
 
 setInterval(async () => {
     const participants = await db.collection('participants').find().toArray();
-  
     participants.forEach(async participant => {
       if (Date.now() - participant.lastStatus > 10000) {
         await db.collection('participants').deleteOne({ _id: participant._id });
