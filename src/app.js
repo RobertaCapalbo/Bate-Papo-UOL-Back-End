@@ -27,7 +27,7 @@ app.post("/participants", async (req, res) => {
         });
         const validate = pSchema.validate(req.body);
         if (validate.error) {
-            return res.status(422).send(error.details[0].message);
+            return res.sendStatus(422);
         }
         const existantP = await db.collection('participants').findOne({name});
         if((existantP)){
