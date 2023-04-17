@@ -21,7 +21,7 @@ mongoClient.connect()
 
 app.post("/participants", async (req, res) => {
         const { name } = req.body;
-        const statusDate = Date.now();
+        const lastStatus = Date.now();
         const pSchema = joi.object({
             name: joi.string().min(1).required()
         });
@@ -41,7 +41,7 @@ app.post("/participants", async (req, res) => {
             type: 'status',
             time: dayjs(statusDate).format('HH:mm:ss')
         }
-        await db.collection('participants').insertOne(req.body)
+        await db.collection('participants').insertOne(name, lastStatus)
         await db.collection("messages").insertOne(newMessage)
         res.status(201).send("Tudo certo")
     }
