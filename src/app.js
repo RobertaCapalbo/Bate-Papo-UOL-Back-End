@@ -59,6 +59,15 @@ app.get("/participants", async (req, res) => {
 })
 
 app.post("/messages", async (req, res) => {
+    const messageSchema = joi.object({
+        to: joi.string().min(1).required(),
+        text: joi.string().min(1).required(),
+        type: joi.string().min(1).required()
+    })
+    const validation = messageSchema.validate(req.body)
+    if(validate.error){
+        return res.sendStatus(422);
+    }
     const { to, text, type } = req.body
     try {
         const { user } = req.headers
